@@ -8,18 +8,31 @@ function factory ($interval, $q) {
     constructor (length, options) {
       this.length = length;
       this.options = angular.extend({
-        tickInterval: 15
+        tickInterval: 15,
+        finishable: true
       }, options);
       this.$$deferred = $q.defer();
     }
-    start () {
+    start (from) {
       const tickInterval = this.options.tickInterval;
+      from = from ? from : 0;
+
+      var first = true;
+      const fromLength = this.length - from;
+
+      if(this.$$interval) clearInterval(this.$$interval);
+      this.emit('reset');
+
       this.$$interval = $interval(() => {
-        this.emit('tick', tickInterval / this.length);
-      }, tickInterval, this.length / tickInterval);
+        this.emit('tick', tickInterval / this.length, (first && from) ? from : undefined);
+        first = false;
+      }, tickInterval, fromLength / tickInterval);
 
       this.$$interval.then(() => {
-        this.emit('done');
+        if(this.options.finishable) {
+          console.log(this.options.finishable)
+          this.emit('done');
+        }
         this.$$deferred.resolve();
       });
 
@@ -28,7 +41,9 @@ function factory ($interval, $q) {
     cancel () {
       if (this.$$interval) {
         $interval.cancel(this.$$interval);
-        this.emit('done');
+        if(this.options.finishable) {
+          this.emit('done');
+        }
         this.$$deferred.reject(new Error('Timer cancelled'));
       }
       return this;

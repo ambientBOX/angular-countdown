@@ -50,7 +50,13 @@ function CountdownController ($scope) {
     }
   });
   this.timer
-    .on('tick', ticked => this.angle += 2 * Pi * ticked)
+    .on('reset', () => this.angle = 0 )
+    .on('tick', (ticked, from) => {
+      if(from) {
+        ticked = ticked * from;
+      }
+      this.angle += 2 * Pi * ticked;
+    })
     .once('done', () => this.done = true);
 }
 CountdownController.$inject = ['$scope'];

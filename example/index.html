@@ -8,7 +8,7 @@
         require('angular-countdown')
       ])
       .controller('AppController', function (CountdownTimer) {
-        this.timer = new CountdownTimer(5000);
+        this.timer = new CountdownTimer(2000, {finishable: false});
       });
     </script>
     <style>

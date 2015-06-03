@@ -5,7 +5,8 @@
   "main": "./src",
   "scripts": {
     "test": "karma start --single-run",
-    "example": "browserify -r ./:angular-countdown > ./example/bundle.js && opn ./example/index.html"
+    "example": "browserify -r ./:angular-countdown > ./example/bundle.js && opn ./example/index.html",
+    "build": "mkdir release && browserify -r ./:angular-countdown > ./release/angular-countdown.js"
   },
   "repository": {
     "type": "git",
